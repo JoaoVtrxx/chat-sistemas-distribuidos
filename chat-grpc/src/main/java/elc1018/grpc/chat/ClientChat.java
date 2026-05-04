@@ -25,7 +25,7 @@ public class ClientChat {
         System.out.print("Digite seu username: ");
         String username = scanner.nextLine();
 
-        // Construir o User (padrão Builder — igual ao RegisterResponse que você fez)
+        // Construir o User (padrão Builder)
         User user = User.newBuilder()
             .setUsername(username)
             .build();
