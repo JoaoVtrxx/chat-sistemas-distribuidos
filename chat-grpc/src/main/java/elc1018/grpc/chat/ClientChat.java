@@ -41,11 +41,15 @@ public class ClientChat {
 
         // Iniciar thread de recebimento de mensagens
         new Thread(() -> {
-            Iterator<ChatMessage> iterator = stub.receiveMessages(user);
-            while (iterator.hasNext()) {
-                ChatMessage msg = iterator.next();
-                String time = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(msg.getTimestamp().getSeconds() * 1000));
-                System.out.println("[" + time + "] [" + msg.getFrom() + "]: " + msg.getContent());
+            try {
+                Iterator<ChatMessage> iterator = stub.receiveMessages(user);
+                while (iterator.hasNext()) {
+                    ChatMessage msg = iterator.next();
+                    String time = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(msg.getTimestamp().getSeconds() * 1000));
+                    System.out.println("[" + time + "] [" + msg.getFrom() + "]: " + msg.getContent());
+                }
+            } catch (io.grpc.StatusRuntimeException e) {
+                // Ignora o erro se o canal tiver sido fechado de propósito
             }
         }).start();
 

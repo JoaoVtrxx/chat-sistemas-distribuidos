@@ -24,6 +24,7 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
             String username = request.getUsername();
             RegisterResponse resposta;
 
+            // Verifica se ja existe o usuario com esse nome
             if (registeredUsers.contains(username)) {
                 resposta = RegisterResponse.newBuilder()
                     .setSuccess(false)
@@ -62,6 +63,7 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
                     return;
                 }
 
+                // Broadcast da mensagem para todos os usuários conectados
                 observers.values().forEach(observer -> {
                     if (observer != null) {
                         observer.onNext(request);
@@ -130,6 +132,7 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
                     });
                 });
 
+                // Enviar a mensagem de boas vindas pra todos
                 observers.values().forEach(observer -> {
                     if (observer != null) {
                         observer.onNext(joinMessage);
