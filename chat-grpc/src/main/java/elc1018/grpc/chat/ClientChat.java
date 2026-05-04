@@ -44,7 +44,8 @@ public class ClientChat {
             Iterator<ChatMessage> iterator = stub.receiveMessages(user);
             while (iterator.hasNext()) {
                 ChatMessage msg = iterator.next();
-                System.out.println("[" + msg.getFrom() + "]: " + msg.getContent());
+                String time = new java.text.SimpleDateFormat("HH:mm:ss").format(new java.util.Date(msg.getTimestamp().getSeconds() * 1000));
+                System.out.println("[" + time + "] [" + msg.getFrom() + "]: " + msg.getContent());
             }
         }).start();
 
@@ -62,7 +63,11 @@ public class ClientChat {
                  .setSeconds(System.currentTimeMillis() / 1000)
                  .build())
              .build();
-            stub.sendMessage(message);
+            Ack ack = stub.sendMessage(message);
+            
+            if (!ack.getSuccess()) {
+                System.out.println("Mensagem não pôde ser enviada. (Inválida ou vazia)");
+            }
         }
     }
 }

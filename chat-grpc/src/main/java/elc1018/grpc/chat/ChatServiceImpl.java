@@ -49,6 +49,19 @@ public class ChatServiceImpl extends ChatServiceGrpc.ChatServiceImplBase {
         public void sendMessage(ChatMessage request,
             StreamObserver<Ack> responseObserver) {
 
+                // Verificação básica: a mensagem possui remente e algum conteúdo
+                if (request.getContent() == null || request.getContent().trim().isEmpty() || 
+                    request.getFrom() == null || request.getFrom().trim().isEmpty()) {
+                    
+                    Ack ack = Ack.newBuilder()
+                        .setSuccess(false)
+                        .build();
+                        
+                    responseObserver.onNext(ack);
+                    responseObserver.onCompleted();
+                    return;
+                }
+
                 observers.values().forEach(observer -> {
                     if (observer != null) {
                         observer.onNext(request);
